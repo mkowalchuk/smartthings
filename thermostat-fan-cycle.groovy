@@ -24,9 +24,9 @@ definition(
 )
 
 preferences {
-	section("Title") {
-		paragraph "Thermostat fan cycle"
-	}
+  section("Title") {
+    paragraph "Thermostat fan cycle"
+  }
   section("Thermostat") {
     input "thermostat", "capability.thermostat", title:"Select thermostat to be controlled", required: true
     input "length", "number", title:"How long to run the fan (in minutes)", defaultValue:20
@@ -39,17 +39,17 @@ def installed() {
 }
 
 def updated() {
-	unsubscribe()
-	unschedule()
- 	initialize()
+  unsubscribe()
+  unschedule()
+   initialize()
 }
 
 def initialize() {
   update_fan_state()
 
-	// watchdog events
+  // watchdog events
   runEvery1Hour(update_fan_state)
-	subscribe(thermostat, 'temperature', evt_handler)
+  subscribe(thermostat, 'temperature', evt_handler)
   subscribe(thermostat, "thermostatOperatingState", evt_handler)
 }
 
@@ -58,7 +58,7 @@ def evt_handler(evt) {
 }
 
 def update_fan_state() {
-	int timeS = now() / 1000
+  int timeS = now() / 1000
   int lengthS = settings.length.toInteger() * 60
   int delayS = settings.delay.toInteger() * 60
   int runPeriodS = lengthS + delayS
@@ -76,9 +76,9 @@ def update_fan_state() {
 }
 
 def schedule_update(delayS) {
-	// Do not use runIn to set up a recurring schedule of less than sixty seconds
-	if (delayS < 60) {
+  // Do not use runIn to set up a recurring schedule of less than sixty seconds
+  if (delayS < 60) {
     delayS = 60
   }
-  runIn(delayS, update_fan_state)	
+  runIn(delayS, update_fan_state)  
 }
